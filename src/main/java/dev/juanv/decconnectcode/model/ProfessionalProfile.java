@@ -21,10 +21,10 @@ public class ProfessionalProfile {
     @Column(nullable = false)
     private String headline;
 
-    @Column(nullable = false, length = 1000)
+    @Column(nullable = false)
     private String description;
 
-    @Column(nullable = false, length = 1000)
+    @Column(nullable = false)
     private String experience;
 
     private String city;

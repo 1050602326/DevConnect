@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Perfil profesional | DevConnect</title>
+</head>
+<body>
+
+<main>
+    <h1>Mi perfil profesional</h1>
+    <p>Completa o actualiza la información de tu perfil.</p>
+
+    <p th:if="${param.success}">
+        ¡Tu perfil se guardó correctamente!
+    </p>
+
+    <p th:if="${error}" th:text="${error}"></p>
+
+    <form th:action="@{/profile}"
+          th:object="${profileRequest}"
+          method="post">
+
+        <div>
+            <label for="headline">Título profesional</label>
+            <input id="headline"
+                   type="text"
+                   th:field="*{headline}"
+                   maxlength="255"
+                   placeholder="Ej. Desarrollador Java">
+            <small th:if="${#fields.hasErrors('headline')}"
+                   th:errors="*{headline}"></small>
+        </div>
+
+        <div>
+            <label for="description">Descripción profesional</label>
+            <textarea id="description"
+                      th:field="*{description}"
+                      maxlength="1000"
+                      rows="5"
+                      placeholder="Cuéntanos sobre ti y tus habilidades"></textarea>
+            <small th:if="${#fields.hasErrors('description')}"
+                   th:errors="*{description}"></small>
+        </div>
+
+        <div>
+            <label for="experience">Experiencia</label>
+            <textarea id="experience"
+                      th:field="*{experience}"
+                      maxlength="1000"
+                      rows="5"
+                      placeholder="Describe tu experiencia laboral o proyectos"></textarea>
+            <small th:if="${#fields.hasErrors('experience')}"
+                   th:errors="*{experience}"></small>
+        </div>
+
+        <div>
+            <label for="city">Ciudad</label>
+            <input id="city"
+                   type="text"
+                   th:field="*{city}"
+                   maxlength="255"
+                   placeholder="Ej. Tunja">
+            <small th:if="${#fields.hasErrors('city')}"
+                   th:errors="*{city}"></small>
+        </div>
+
+        <button type="submit"
+                th:text="${hasProfile} ? 'Guardar cambios' : 'Crear perfil'">
+            Guardar perfil
+        </button>
+    </form>
+
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Cerrar sesión</button>
+    </form>
+</main>
+
+</body>
+</html>
