@@ -5,72 +5,258 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Perfil profesional | DevConnect</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 30px;
+            color: #222;
+        }
+
+        main {
+            max-width: 850px;
+            margin: auto;
+        }
+
+        section {
+            background: white;
+            padding: 24px;
+            margin-bottom: 22px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #00000012;
+        }
+
+        h1, h2 {
+            color: #234a75;
+        }
+
+        label {
+            display: block;
+            margin-top: 12px;
+            font-weight: bold;
+        }
+
+        input, textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background: #245b91;
+            color: white;
+            padding: 10px 18px;
+            margin-top: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #183f66;
+        }
+
+        .success {
+            color: #176b35;
+        }
+
+        .error {
+            color: #b42318;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
 
 <main>
     <h1>Mi perfil profesional</h1>
-    <p>Completa o actualiza la información de tu perfil.</p>
+    <p>Administra tu información profesional en DevConnect.</p>
 
-    <p th:if="${param.success}">
-        ¡Tu perfil se guardó correctamente!
-    </p>
+    <!-- HU-03: Perfil profesional -->
+    <section>
+        <h2>Información profesional</h2>
 
-    <p th:if="${error}" th:text="${error}"></p>
+        <p class="success" th:if="${param.success}">
+            ¡Tu perfil se guardó correctamente!
+        </p>
 
-    <form th:action="@{/profile}"
-          th:object="${profileRequest}"
-          method="post">
+        <p class="error" th:if="${error}" th:text="${error}"></p>
 
-        <div>
+        <form th:action="@{/profile}"
+              th:object="${profileRequest}"
+              method="post">
+
             <label for="headline">Título profesional</label>
-            <input id="headline"
-                   type="text"
+            <input id="headline" type="text"
                    th:field="*{headline}"
                    maxlength="255"
                    placeholder="Ej. Desarrollador Java">
-            <small th:if="${#fields.hasErrors('headline')}"
+            <small class="error"
+                   th:if="${#fields.hasErrors('headline')}"
                    th:errors="*{headline}"></small>
-        </div>
 
-        <div>
             <label for="description">Descripción profesional</label>
             <textarea id="description"
                       th:field="*{description}"
-                      maxlength="1000"
-                      rows="5"
-                      placeholder="Cuéntanos sobre ti y tus habilidades"></textarea>
-            <small th:if="${#fields.hasErrors('description')}"
+                      maxlength="1000" rows="5"
+                      placeholder="Cuéntanos sobre ti"></textarea>
+            <small class="error"
+                   th:if="${#fields.hasErrors('description')}"
                    th:errors="*{description}"></small>
-        </div>
 
-        <div>
             <label for="experience">Experiencia</label>
             <textarea id="experience"
                       th:field="*{experience}"
-                      maxlength="1000"
-                      rows="5"
-                      placeholder="Describe tu experiencia laboral o proyectos"></textarea>
-            <small th:if="${#fields.hasErrors('experience')}"
+                      maxlength="1000" rows="5"
+                      placeholder="Describe tu experiencia"></textarea>
+            <small class="error"
+                   th:if="${#fields.hasErrors('experience')}"
                    th:errors="*{experience}"></small>
-        </div>
 
-        <div>
             <label for="city">Ciudad</label>
-            <input id="city"
-                   type="text"
+            <input id="city" type="text"
                    th:field="*{city}"
                    maxlength="255"
                    placeholder="Ej. Tunja">
-            <small th:if="${#fields.hasErrors('city')}"
+            <small class="error"
+                   th:if="${#fields.hasErrors('city')}"
                    th:errors="*{city}"></small>
-        </div>
 
-        <button type="submit"
-                th:text="${hasProfile} ? 'Guardar cambios' : 'Crear perfil'">
-            Guardar perfil
-        </button>
-    </form>
+            <button type="submit"
+                    th:text="${hasProfile} ? 'Guardar cambios' : 'Crear perfil'">
+                Guardar perfil
+            </button>
+        </form>
+    </section>
+
+    <!-- HU-04: Estudios -->
+    <section>
+        <h2>Mis estudios</h2>
+
+        <p class="success" th:if="${param.educationSuccess}">
+            Estudio agregado correctamente.
+        </p>
+        <p class="error" th:if="${param.educationError}">
+            No se pudo guardar el estudio. Revisa los campos.
+        </p>
+
+        <form th:action="@{/profile/education}"
+              th:object="${educationRequest}"
+              method="post">
+
+            <label for="institution">Institución educativa</label>
+            <input id="institution" type="text"
+                   th:field="*{institution}"
+                   maxlength="255" required
+                   placeholder="Ej. Universidad Santo Tomás">
+
+            <label for="program">Programa académico</label>
+            <input id="program" type="text"
+                   th:field="*{program}"
+                   maxlength="255" required
+                   placeholder="Ej. Ingeniería de Sistemas">
+
+            <button type="submit">Agregar estudio</button>
+        </form>
+
+        <h3>Estudios registrados</h3>
+        <p th:if="${#lists.isEmpty(educations)}">
+            Todavía no tienes estudios registrados.
+        </p>
+        <ul th:unless="${#lists.isEmpty(educations)}">
+            <li th:each="education : ${educations}">
+                <strong th:text="${education.program}"></strong>
+                -
+                <span th:text="${education.institution}"></span>
+            </li>
+        </ul>
+    </section>
+
+    <!-- HU-04: Habilidades -->
+    <section>
+        <h2>Mis habilidades</h2>
+
+        <p class="success" th:if="${param.skillSuccess}">
+            Habilidad agregada correctamente.
+        </p>
+        <p class="error" th:if="${param.skillError}">
+            No se pudo guardar la habilidad. Revisa los campos.
+        </p>
+
+        <form th:action="@{/profile/skill}"
+              th:object="${skillRequest}"
+              method="post">
+
+            <label for="skillName">Nombre de la habilidad</label>
+            <input id="skillName" type="text"
+                   th:field="*{name}"
+                   maxlength="255" required
+                   placeholder="Ej. Java">
+
+            <button type="submit">Agregar habilidad</button>
+        </form>
+
+        <h3>Habilidades registradas</h3>
+        <p th:if="${#lists.isEmpty(skills)}">
+            Todavía no tienes habilidades registradas.
+        </p>
+        <ul th:unless="${#lists.isEmpty(skills)}">
+            <li th:each="skill : ${skills}"
+                th:text="${skill.name}"></li>
+        </ul>
+    </section>
+
+    <!-- HU-04: Certificaciones -->
+    <section>
+        <h2>Mis certificaciones</h2>
+
+        <p class="success" th:if="${param.certificationSuccess}">
+            Certificación agregada correctamente.
+        </p>
+        <p class="error" th:if="${param.certificationError}">
+            No se pudo guardar la certificación. Revisa los campos.
+        </p>
+
+        <form th:action="@{/profile/certification}"
+              th:object="${certificationRequest}"
+              method="post">
+
+            <label for="certificationName">Certificación</label>
+            <input id="certificationName" type="text"
+                   th:field="*{name}"
+                   maxlength="255" required
+                   placeholder="Ej. Java Fundamentals">
+
+            <label for="certificationInstitution">
+                Institución certificadora
+            </label>
+            <input id="certificationInstitution" type="text"
+                   th:field="*{institution}"
+                   maxlength="255" required
+                   placeholder="Ej. Oracle">
+
+            <button type="submit">Agregar certificación</button>
+        </form>
+
+        <h3>Certificaciones registradas</h3>
+        <p th:if="${#lists.isEmpty(certifications)}">
+            Todavía no tienes certificaciones registradas.
+        </p>
+        <ul th:unless="${#lists.isEmpty(certifications)}">
+            <li th:each="certification : ${certifications}">
+                <strong th:text="${certification.name}"></strong>
+                -
+                <span th:text="${certification.institution}"></span>
+            </li>
+        </ul>
+    </section>
 
     <form th:action="@{/logout}" method="post">
         <button type="submit">Cerrar sesión</button>
