@@ -1,81 +1,524 @@
-
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Perfil profesional | DevConnect</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #eef0fb;
+            --surface: #ffffff;
+            --surface-2: #f6f7fd;
+            --ink: #14162e;
+            --ink-soft: #5a5f82;
+            --line: #dfe2f3;
+            --accent: #3b4bff;
+            --accent-ink: #ffffff;
+            --accent-soft: #e3e6ff;
+            --ok-bg: #dff7ea;
+            --ok-ink: #0d6b3c;
+            --err-bg: #ffe6e6;
+            --err-ink: #b3261e;
+            --shadow: 0 1px 2px rgba(20, 22, 46, .05), 0 12px 32px -12px rgba(59, 75, 255, .18);
+            --radius-lg: 24px;
+            --radius-md: 14px;
+            --radius-sm: 10px;
+            --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+            --font-body: "DM Sans", "Segoe UI", system-ui, sans-serif;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0d0f22;
+                --surface: #161934;
+                --surface-2: #1d2142;
+                --ink: #eef0ff;
+                --ink-soft: #a0a6d0;
+                --line: #2b2f58;
+                --accent: #7b87ff;
+                --accent-ink: #0d0f22;
+                --accent-soft: #262b63;
+                --ok-bg: #123a29;
+                --ok-ink: #7be3ae;
+                --err-bg: #4a1d1f;
+                --err-ink: #ffb4ab;
+                --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 12px 32px -12px rgba(0, 0, 0, .6);
+            }
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        html { color-scheme: light dark; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                    radial-gradient(900px 420px at 85% -10%, var(--accent-soft), transparent 70%),
+                    var(--bg);
+            color: var(--ink);
+            font-family: var(--font-body);
+            font-size: 16px;
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ---------- Barra superior ---------- */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 20px 24px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: -.02em;
+        }
+
+        .brand-mark {
+            display: grid;
+            place-items: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: var(--accent);
+            color: var(--accent-ink);
+            font-size: .95rem;
+            font-weight: 800;
+        }
+
+        .logout-form { margin: 0; }
+
+        /* ---------- Layout ---------- */
+        main {
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+            gap: 32px;
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 8px 24px 64px;
+            align-items: start;
+        }
+
+        .intro { grid-column: 1 / -1; max-width: 640px; }
+
+        h1 {
+            margin: 0 0 8px;
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: clamp(2rem, 4.5vw, 3.1rem);
+            line-height: 1.05;
+            letter-spacing: -.035em;
+        }
+
+        .intro p { margin: 0; color: var(--ink-soft); font-size: 1.05rem; }
+
+        /* ---------- Formulario ---------- */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+        }
+
+        .profile-form { padding: 32px; display: grid; gap: 22px; }
+
+        .field { display: grid; gap: 8px; }
+
+        .field-head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        label { font-weight: 600; font-size: .95rem; }
+
+        .counter { font-size: .8rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 13px 15px;
+            font: inherit;
+            color: var(--ink);
+            background: var(--surface-2);
+            border: 1.5px solid var(--line);
+            border-radius: var(--radius-md);
+            transition: border-color .15s, box-shadow .15s, background-color .15s;
+        }
+
+        textarea { resize: vertical; min-height: 120px; line-height: 1.5; }
+
+        input::placeholder, textarea::placeholder { color: var(--ink-soft); opacity: .7; }
+
+        input:hover, textarea:hover { border-color: var(--accent); }
+
+        input:focus-visible, textarea:focus-visible {
+            outline: none;
+            background: var(--surface);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-soft);
+        }
+
+        .field.has-error input,
+        .field.has-error textarea { border-color: var(--err-ink); }
+
+        .field-error {
+            color: var(--err-ink);
+            font-size: .85rem;
+            font-weight: 500;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 24px;
+            font: inherit;
+            font-weight: 600;
+            border: 0;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: transform .15s, box-shadow .15s, background-color .15s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--accent-ink);
+            box-shadow: 0 10px 24px -10px var(--accent);
+            justify-self: start;
+        }
+
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 14px 28px -10px var(--accent); }
+        .btn-primary:active { transform: translateY(0); }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--ink);
+            border: 1.5px solid var(--line);
+            padding: 9px 18px;
+            font-size: .9rem;
+        }
+
+        .btn-ghost:hover { background: var(--surface); border-color: var(--ink-soft); }
+
+        .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+        /* ---------- Mensajes ---------- */
+        .alert {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            font-size: .95rem;
+        }
+
+        .alert-success { background: var(--ok-bg); color: var(--ok-ink); }
+        .alert-error { background: var(--err-bg); color: var(--err-ink); }
+
+        /* ---------- Vista previa ---------- */
+        .side { position: sticky; top: 24px; display: grid; gap: 16px; }
+
+        .preview { overflow: hidden; }
+
+        .preview-cover {
+            height: 96px;
+            background:
+                    radial-gradient(circle at 20% 120%, #ff9d7a 0, transparent 55%),
+                    linear-gradient(120deg, var(--accent), #8a5cff);
+        }
+
+        .preview-body { padding: 0 26px 26px; }
+
+        .avatar {
+            display: grid;
+            place-items: center;
+            width: 76px;
+            height: 76px;
+            margin-top: -38px;
+            border-radius: 22px;
+            border: 4px solid var(--surface);
+            background: var(--ink);
+            color: var(--surface);
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 1.4rem;
+        }
+
+        .preview-headline {
+            margin: 16px 0 4px;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.4rem;
+            line-height: 1.2;
+            letter-spacing: -.02em;
+            overflow-wrap: anywhere;
+        }
+
+        .preview-city {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin: 0;
+            color: var(--ink-soft);
+            font-size: .9rem;
+        }
+
+        .preview-section { margin-top: 20px; }
+
+        .preview-section h2 {
+            margin: 0 0 6px;
+            font-size: .95rem;
+            font-weight: 600;
+        }
+
+        .preview-section p {
+            margin: 0;
+            color: var(--ink-soft);
+            font-size: .92rem;
+            overflow-wrap: anywhere;
+            white-space: pre-line;
+        }
+
+        .is-empty { opacity: .55; font-style: italic; }
+
+        .progress { padding: 18px 22px; }
+
+        .progress-head {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: .9rem;
+            font-weight: 600;
+        }
+
+        .progress-track {
+            height: 8px;
+            border-radius: 999px;
+            background: var(--surface-2);
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--accent), #8a5cff);
+            transition: width .4s ease;
+        }
+
+        /* ---------- Responsive ---------- */
+        @media (max-width: 900px) {
+            main { grid-template-columns: 1fr; }
+            .side { position: static; order: 2; }
+        }
+
+        @media (max-width: 520px) {
+            .topbar, main { padding-left: 16px; padding-right: 16px; }
+            .profile-form { padding: 22px 18px; }
+            .btn-primary { width: 100%; justify-self: stretch; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; }
+        }
+    </style>
 </head>
 <body>
 
+<header class="topbar">
+    <div class="brand">
+        <span class="brand-mark" aria-hidden="true">&lt;/&gt;</span>
+        DevConnect
+    </div>
+
+    <form class="logout-form" th:action="@{/logout}" method="post">
+        <button type="submit" class="btn btn-ghost">Cerrar sesión</button>
+    </form>
+</header>
+
 <main>
-    <h1>Mi perfil profesional</h1>
-    <p>Completa o actualiza la información de tu perfil.</p>
+    <section class="intro">
+        <h1>Mi perfil profesional</h1>
+        <p>Completa o actualiza la información de tu perfil.</p>
+    </section>
 
-    <p th:if="${param.success}">
-        ¡Tu perfil se guardó correctamente!
-    </p>
+    <section class="card">
+        <form class="profile-form"
+              th:action="@{/profile}"
+              th:object="${profileRequest}"
+              method="post">
 
-    <p th:if="${error}" th:text="${error}"></p>
+            <p class="alert alert-success" role="status" th:if="${param.success}">
+                ¡Tu perfil se guardó correctamente!
+            </p>
 
-    <form th:action="@{/profile}"
-          th:object="${profileRequest}"
-          method="post">
+            <p class="alert alert-error" role="alert" th:if="${error}" th:text="${error}"></p>
 
-        <div>
-            <label for="headline">Título profesional</label>
-            <input id="headline"
-                   type="text"
-                   th:field="*{headline}"
-                   maxlength="255"
-                   placeholder="Ej. Desarrollador Java">
-            <small th:if="${#fields.hasErrors('headline')}"
-                   th:errors="*{headline}"></small>
+            <div class="field" th:classappend="${#fields.hasErrors('headline')} ? 'has-error'">
+                <div class="field-head">
+                    <label for="headline">Título profesional</label>
+                    <span class="counter" data-counter-for="headline"></span>
+                </div>
+                <input id="headline"
+                       type="text"
+                       th:field="*{headline}"
+                       maxlength="255"
+                       placeholder="Ej. Desarrollador Java">
+                <small class="field-error"
+                       th:if="${#fields.hasErrors('headline')}"
+                       th:errors="*{headline}"></small>
+            </div>
+
+            <div class="field" th:classappend="${#fields.hasErrors('description')} ? 'has-error'">
+                <div class="field-head">
+                    <label for="description">Descripción profesional</label>
+                    <span class="counter" data-counter-for="description"></span>
+                </div>
+                <textarea id="description"
+                          th:field="*{description}"
+                          maxlength="1000"
+                          rows="5"
+                          placeholder="Cuéntanos sobre ti y tus habilidades"></textarea>
+                <small class="field-error"
+                       th:if="${#fields.hasErrors('description')}"
+                       th:errors="*{description}"></small>
+            </div>
+
+            <div class="field" th:classappend="${#fields.hasErrors('experience')} ? 'has-error'">
+                <div class="field-head">
+                    <label for="experience">Experiencia</label>
+                    <span class="counter" data-counter-for="experience"></span>
+                </div>
+                <textarea id="experience"
+                          th:field="*{experience}"
+                          maxlength="1000"
+                          rows="5"
+                          placeholder="Describe tu experiencia laboral o proyectos"></textarea>
+                <small class="field-error"
+                       th:if="${#fields.hasErrors('experience')}"
+                       th:errors="*{experience}"></small>
+            </div>
+
+            <div class="field" th:classappend="${#fields.hasErrors('city')} ? 'has-error'">
+                <div class="field-head">
+                    <label for="city">Ciudad</label>
+                    <span class="counter" data-counter-for="city"></span>
+                </div>
+                <input id="city"
+                       type="text"
+                       th:field="*{city}"
+                       maxlength="255"
+                       placeholder="Ej. Tunja">
+                <small class="field-error"
+                       th:if="${#fields.hasErrors('city')}"
+                       th:errors="*{city}"></small>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary"
+                    th:text="${hasProfile} ? 'Guardar cambios' : 'Crear perfil'">
+                Guardar perfil
+            </button>
+        </form>
+    </section>
+
+    <aside class="side" aria-label="Vista previa de tu perfil">
+        <article class="card preview">
+            <div class="preview-cover" aria-hidden="true"></div>
+            <div class="preview-body">
+                <div class="avatar" aria-hidden="true">&lt;/&gt;</div>
+
+                <h2 class="preview-headline" id="pv-headline">Tu título profesional</h2>
+                <p class="preview-city">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/>
+                        <circle cx="12" cy="10" r="2.5"/>
+                    </svg>
+                    <span id="pv-city">Tu ciudad</span>
+                </p>
+
+                <div class="preview-section">
+                    <h2>Sobre mí</h2>
+                    <p id="pv-description">Aquí aparecerá tu descripción.</p>
+                </div>
+
+                <div class="preview-section">
+                    <h2>Experiencia</h2>
+                    <p id="pv-experience">Aquí aparecerá tu experiencia.</p>
+                </div>
+            </div>
+        </article>
+
+        <div class="card progress">
+            <div class="progress-head">
+                <span>Perfil completado</span>
+                <span id="progress-text">0%</span>
+            </div>
+            <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress-track">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
         </div>
-
-        <div>
-            <label for="description">Descripción profesional</label>
-            <textarea id="description"
-                      th:field="*{description}"
-                      maxlength="1000"
-                      rows="5"
-                      placeholder="Cuéntanos sobre ti y tus habilidades"></textarea>
-            <small th:if="${#fields.hasErrors('description')}"
-                   th:errors="*{description}"></small>
-        </div>
-
-        <div>
-            <label for="experience">Experiencia</label>
-            <textarea id="experience"
-                      th:field="*{experience}"
-                      maxlength="1000"
-                      rows="5"
-                      placeholder="Describe tu experiencia laboral o proyectos"></textarea>
-            <small th:if="${#fields.hasErrors('experience')}"
-                   th:errors="*{experience}"></small>
-        </div>
-
-        <div>
-            <label for="city">Ciudad</label>
-            <input id="city"
-                   type="text"
-                   th:field="*{city}"
-                   maxlength="255"
-                   placeholder="Ej. Tunja">
-            <small th:if="${#fields.hasErrors('city')}"
-                   th:errors="*{city}"></small>
-        </div>
-
-        <button type="submit"
-                th:text="${hasProfile} ? 'Guardar cambios' : 'Crear perfil'">
-            Guardar perfil
-        </button>
-    </form>
-
-    <form th:action="@{/logout}" method="post">
-        <button type="submit">Cerrar sesión</button>
-    </form>
+    </aside>
 </main>
+
+<script>
+    (function () {
+        var fields = {
+            headline:    { el: document.getElementById('headline'),    pv: document.getElementById('pv-headline'),    fallback: 'Tu título profesional' },
+            description: { el: document.getElementById('description'), pv: document.getElementById('pv-description'), fallback: 'Aquí aparecerá tu descripción.' },
+            experience:  { el: document.getElementById('experience'),  pv: document.getElementById('pv-experience'),  fallback: 'Aquí aparecerá tu experiencia.' },
+            city:        { el: document.getElementById('city'),        pv: document.getElementById('pv-city'),        fallback: 'Tu ciudad' }
+        };
+
+        var bar = document.getElementById('progress-bar');
+        var text = document.getElementById('progress-text');
+        var track = document.getElementById('progress-track');
+
+        function update() {
+            var filled = 0;
+            Object.keys(fields).forEach(function (key) {
+                var f = fields[key];
+                var value = f.el.value.trim();
+                if (value) { filled++; f.pv.textContent = value; f.pv.classList.remove('is-empty'); }
+                else { f.pv.textContent = f.fallback; f.pv.classList.add('is-empty'); }
+
+                var counter = document.querySelector('[data-counter-for="' + key + '"]');
+                if (counter) counter.textContent = f.el.value.length + ' / ' + f.el.maxLength;
+            });
+
+            var pct = Math.round((filled / 4) * 100);
+            bar.style.width = pct + '%';
+            text.textContent = pct + '%';
+            track.setAttribute('aria-valuenow', pct);
+        }
+
+        Object.keys(fields).forEach(function (key) {
+            fields[key].el.addEventListener('input', update);
+        });
+
+        update();
+    })();
+</script>
 
 </body>
 </html>
