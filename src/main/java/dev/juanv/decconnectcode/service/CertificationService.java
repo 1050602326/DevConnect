@@ -46,4 +46,52 @@ public class CertificationService {
                 .map(profile -> certificationRepository.findByProfileId(profile.getId()))
                 .orElseGet(List::of);
     }
+    @Transactional
+    public void deleteCertification(Long professionalId, Long certificationId) {
+
+        ProfessionalProfile profile = profileService.findProfile(professionalId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Perfil profesional no encontrado"));
+
+        Certification certification = certificationRepository.findById(certificationId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Certificación no encontrada"));
+
+        if (!certification.getProfile().getId().equals(profile.getId())) {
+            throw new IllegalArgumentException(
+                    "No tienes permiso para eliminar esta certificación"
+            );
+        }
+
+        certificationRepository.delete(certification);
+    }
+    @Transactional
+    public void updateCertification(
+            Long professionalId,
+            Long certificationId,
+            CertificationRequest request
+    ) {
+
+        ProfessionalProfile profile = profileService.findProfile(professionalId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Perfil profesional no encontrado"));
+
+        Certification certification =
+                certificationRepository.findById(certificationId)
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "Certificación no encontrada"
+                                ));
+
+        if (!certification.getProfile().getId().equals(profile.getId())) {
+            throw new IllegalArgumentException(
+                    "No tienes permiso para editar esta certificación"
+            );
+        }
+
+        certification.setName(request.getName());
+        certification.setInstitution(request.getInstitution());
+
+        certificationRepository.save(certification);
+    }
 }

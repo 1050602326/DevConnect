@@ -62,4 +62,30 @@ public class EducationService {
 
         educationRepository.delete(education);
     }
+    @Transactional
+    public void updateEducation(
+            Long professionalId,
+            Long educationId,
+            EducationRequest request
+    ) {
+
+        ProfessionalProfile profile = profileService.findProfile(professionalId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Perfil profesional no encontrado"));
+
+        Education education = educationRepository.findById(educationId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Estudio no encontrado"));
+
+        if (!education.getProfile().getId().equals(profile.getId())) {
+            throw new IllegalArgumentException(
+                    "No tienes permiso para editar este estudio"
+            );
+        }
+
+        education.setInstitution(request.getInstitution());
+        education.setProgram(request.getProgram());
+
+        educationRepository.save(education);
+    }
 }

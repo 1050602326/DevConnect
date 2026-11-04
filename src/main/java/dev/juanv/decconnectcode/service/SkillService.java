@@ -61,4 +61,29 @@ public class SkillService {
 
         skillRepository.delete(skill);
     }
+    @Transactional
+    public void updateSkill(
+            Long professionalId,
+            Long skillId,
+            SkillRequest request
+    ) {
+
+        ProfessionalProfile profile = profileService.findProfile(professionalId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Perfil profesional no encontrado"));
+
+        Skill skill = skillRepository.findById(skillId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Habilidad no encontrada"));
+
+        if (!skill.getProfile().getId().equals(profile.getId())) {
+            throw new IllegalArgumentException(
+                    "No tienes permiso para editar esta habilidad"
+            );
+        }
+
+        skill.setName(request.getName());
+
+        skillRepository.save(skill);
+    }
 }

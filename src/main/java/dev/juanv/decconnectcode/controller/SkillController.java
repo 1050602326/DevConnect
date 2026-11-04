@@ -75,4 +75,38 @@ public class SkillController {
             return "redirect:/profile?skillDeleteError";
         }
     }
+    @PostMapping("/profile/skill/{id}/edit")
+    public String editSkill(
+            @PathVariable Long id,
+            @Valid @ModelAttribute("skillRequest") SkillRequest request,
+            BindingResult bindingResult,
+            HttpSession session
+    ) {
+
+        Long professionalId =
+                sessionService.getProfessionalId(session);
+
+        if (professionalId == null) {
+            return "redirect:/login";
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "redirect:/profile?skillEditError";
+        }
+
+        try {
+
+            skillService.updateSkill(
+                    professionalId,
+                    id,
+                    request
+            );
+
+            return "redirect:/profile?skillUpdated";
+
+        } catch (IllegalArgumentException e) {
+
+            return "redirect:/profile?skillEditError";
+        }
+    }
 }
