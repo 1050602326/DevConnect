@@ -48,4 +48,29 @@ public class EducationController {
             return "redirect:/profile?educationError";
         }
     }
+    @PostMapping("/profile/education/{id}/delete")
+    public String deleteEducation(
+            @org.springframework.web.bind.annotation.PathVariable Long id,
+            HttpSession session) {
+
+        Long professionalId =
+                sessionService.getProfessionalId(session);
+
+        if (professionalId == null) {
+            return "redirect:/login";
+        }
+
+        try {
+            educationService.deleteEducation(
+                    professionalId,
+                    id
+            );
+
+            return "redirect:/profile?educationDeleted";
+
+        } catch (IllegalArgumentException e) {
+
+            return "redirect:/profile?educationDeleteError";
+        }
+    }
 }

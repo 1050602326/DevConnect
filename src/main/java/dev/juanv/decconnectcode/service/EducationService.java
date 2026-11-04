@@ -43,4 +43,23 @@ public class EducationService {
                 .map(profile -> educationRepository.findByProfileId(profile.getId()))
                 .orElseGet(List::of);
     }
+    @Transactional
+    public void deleteEducation(Long professionalId, Long educationId) {
+
+        ProfessionalProfile profile = profileService.findProfile(professionalId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Perfil profesional no encontrado"));
+
+        Education education = educationRepository.findById(educationId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Estudio no encontrado"));
+
+        if (!education.getProfile().getId().equals(profile.getId())) {
+            throw new IllegalArgumentException(
+                    "No tienes permiso para eliminar este estudio"
+            );
+        }
+
+        educationRepository.delete(education);
+    }
 }

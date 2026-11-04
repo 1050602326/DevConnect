@@ -42,4 +42,23 @@ public class SkillService {
                 .map(profile -> skillRepository.findByProfileId(profile.getId()))
                 .orElseGet(List::of);
     }
+    @Transactional
+    public void deleteSkill(Long professionalId, Long skillId) {
+
+        ProfessionalProfile profile = profileService.findProfile(professionalId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Perfil profesional no encontrado"));
+
+        Skill skill = skillRepository.findById(skillId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Habilidad no encontrada"));
+
+        if (!skill.getProfile().getId().equals(profile.getId())) {
+            throw new IllegalArgumentException(
+                    "No tienes permiso para eliminar esta habilidad"
+            );
+        }
+
+        skillRepository.delete(skill);
+    }
 }
