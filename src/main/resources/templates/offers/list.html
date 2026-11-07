@@ -1,0 +1,383 @@
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ofertas laborales | DevConnect</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #0d1117;
+      --panel: #161b22;
+      --border: #30363d;
+      --text: #f0f6fc;
+      --muted: #8b949e;
+      --blue: #2f81f7;
+      --green: #3fb950;
+      --cyan: #39c5cf;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--text);
+      background:
+              radial-gradient(circle at 85% 10%, rgba(63,185,80,.09), transparent 30%),
+              radial-gradient(circle at 10% 90%, rgba(47,129,247,.14), transparent 35%),
+              var(--bg);
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .navbar {
+      min-height: 72px;
+      padding: 0 6%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(13,17,23,.94);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-size: 21px;
+      font-weight: 800;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: linear-gradient(135deg,#0969da,#39c5cf);
+      box-shadow: 0 0 25px rgba(47,129,247,.3);
+    }
+
+    .brand-name span {
+      color: var(--cyan);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 17px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 700;
+      transition: .2s;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      color: var(--text);
+      border: 1px solid var(--border);
+      background: transparent;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .btn-blue {
+      color: white;
+      border: none;
+      background: linear-gradient(90deg,#0969da,#2f81f7);
+      box-shadow: 0 6px 20px rgba(47,129,247,.2);
+    }
+
+    .container {
+      width: min(1150px, 90%);
+      margin: auto;
+      padding: 48px 0 65px;
+    }
+
+    .heading {
+      margin-bottom: 30px;
+    }
+
+    .heading-label {
+      display: inline-block;
+      padding: 6px 11px;
+      margin-bottom: 14px;
+      border-radius: 30px;
+      color: var(--cyan);
+      background: rgba(57,197,207,.08);
+      border: 1px solid rgba(57,197,207,.25);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .heading h1 {
+      font-size: clamp(28px, 4vw, 37px);
+      margin-bottom: 10px;
+    }
+
+    .heading h1 span {
+      color: var(--cyan);
+    }
+
+    .heading p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .offers-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .offer-card {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 23px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      transition: .25s;
+    }
+
+    .offer-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(57,197,207,.55);
+      box-shadow: 0 14px 35px rgba(0,0,0,.25);
+    }
+
+    .offer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modality {
+      display: inline-block;
+      padding: 6px 11px;
+      border-radius: 30px;
+      color: var(--cyan);
+      background: rgba(57,197,207,.09);
+      border: 1px solid rgba(57,197,207,.23);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .offer-icon {
+      width: 37px;
+      height: 37px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      color: var(--green);
+      background: rgba(63,185,80,.09);
+      font-size: 17px;
+    }
+
+    .offer-card h2 {
+      margin-bottom: 9px;
+      font-size: 19px;
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+    }
+
+    .company-name {
+      margin-bottom: 16px;
+      color: var(--cyan);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .offer-location {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 15px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .offer-description {
+      margin-bottom: 22px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+      overflow-wrap: anywhere;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .offer-card .btn {
+      width: 100%;
+      margin-top: auto;
+    }
+
+    .empty-state {
+      padding: 45px 20px;
+      margin-bottom: 25px;
+      text-align: center;
+      background: var(--panel);
+      border: 1px dashed var(--border);
+      border-radius: 15px;
+    }
+
+    .empty-icon {
+      width: 58px;
+      height: 58px;
+      margin: 0 auto 17px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      color: var(--cyan);
+      background: rgba(57,197,207,.09);
+      font-size: 25px;
+    }
+
+    .empty-state h2 {
+      margin-bottom: 9px;
+      font-size: 19px;
+    }
+
+    .empty-state p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    footer {
+      padding: 25px;
+      text-align: center;
+      color: #6e7681;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .offers-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 600px) {
+      .offers-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .navbar {
+        padding: 0 4%;
+      }
+
+      .container {
+        padding-top: 35px;
+      }
+
+      .brand {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+  <a href="/" class="brand">
+    <div class="brand-icon">&lt;/&gt;</div>
+    <div class="brand-name">Dev<span>Connect</span></div>
+  </a>
+
+  <a href="/login" class="btn btn-outline">
+    Iniciar sesión
+  </a>
+</nav>
+
+<main class="container">
+
+  <header class="heading">
+    <span class="heading-label">OPORTUNIDADES PROFESIONALES</span>
+    <h1>Ofertas <span>laborales</span></h1>
+    <p>
+      Descubre oportunidades, conecta con empresas y encuentra
+      el próximo paso para tu desarrollo profesional.
+    </p>
+  </header>
+
+  <div th:if="${#lists.isEmpty(offers)}" class="empty-state">
+    <div class="empty-icon">⌕</div>
+    <h2>No hay ofertas disponibles</h2>
+    <p>
+      Actualmente no existen oportunidades publicadas.
+      Vuelve pronto para consultar nuevas ofertas laborales.
+    </p>
+  </div>
+
+  <div class="offers-grid" th:unless="${#lists.isEmpty(offers)}">
+
+    <article class="offer-card" th:each="offer : ${offers}">
+
+      <div class="offer-top">
+                <span class="modality" th:text="${offer.modality}">
+                    Modalidad
+                </span>
+
+        <div class="offer-icon">✦</div>
+      </div>
+
+      <h2 th:text="${offer.title}">
+        Nombre del cargo
+      </h2>
+
+      <p class="company-name" th:text="${offer.company.name}">
+        Empresa
+      </p>
+
+      <p class="offer-location">
+        <span>⌖</span>
+        <span th:text="${offer.location}">Ubicación</span>
+      </p>
+
+      <p class="offer-description"
+         th:text="${offer.description}">
+        Descripción de la oferta laboral.
+      </p>
+
+      <a th:href="@{/offers/{id}(id=${offer.id})}"
+         class="btn btn-outline">
+        Ver detalles de la oferta →
+      </a>
+
+    </article>
+
+  </div>
+
+</main>
+
+<footer>
+  DevConnect · Tecnología que conecta talento y empresas.
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,579 @@
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro empresarial | DevConnect</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #0d1117;
+      --panel: #161b22;
+      --border: #30363d;
+      --text: #f0f6fc;
+      --muted: #8b949e;
+      --blue: #2f81f7;
+      --cyan: #39c5cf;
+      --green: #3fb950;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    .left-panel {
+      width: 43%;
+      min-height: 100vh;
+      padding: 42px 6%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      background:
+              radial-gradient(circle at 20% 30%, rgba(47,129,247,.15), transparent 45%),
+              radial-gradient(circle at 80% 85%, rgba(63,185,80,.10), transparent 35%),
+              #0d1117;
+      border-right: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      color: var(--text);
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      color: white;
+      background: linear-gradient(135deg,#0969da,#39c5cf);
+      box-shadow: 0 0 22px rgba(47,129,247,.35);
+    }
+
+    .brand span {
+      color: var(--cyan);
+    }
+
+    .hero-content {
+      max-width: 480px;
+      margin: 45px 0;
+    }
+
+    .hero-content h1 {
+      margin-bottom: 22px;
+      font-size: clamp(36px,4vw,53px);
+      font-weight: 850;
+      line-height: 1.1;
+      letter-spacing: -1.7px;
+    }
+
+    .hero-content h1 span {
+      color: var(--green);
+    }
+
+    .hero-content p {
+      max-width: 410px;
+      margin-bottom: 27px;
+      color: #a3b1c2;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .feature {
+      padding: 9px 12px;
+      color: #c9d1d9;
+      background: rgba(22,27,34,.7);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      font-size: 10px;
+    }
+
+    .feature span {
+      margin-right: 5px;
+      color: var(--green);
+    }
+
+    .visual-card {
+      width: 215px;
+      padding: 17px;
+      margin: 0 0 0 auto;
+      transform: rotate(-3deg);
+      background: #161b22;
+      border: 1px solid #31547b;
+      border-radius: 14px;
+      box-shadow: 0 15px 40px rgba(0,0,0,.3);
+    }
+
+    .window-dots {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 17px;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #f85149;
+    }
+
+    .dot:nth-child(2) {
+      background: #d29922;
+    }
+
+    .dot:nth-child(3) {
+      background: var(--green);
+    }
+
+    .visual-line {
+      height: 6px;
+      margin: 9px 0;
+      border-radius: 10px;
+      background: var(--blue);
+    }
+
+    .visual-line.green {
+      width: 60%;
+      background: var(--green);
+    }
+
+    .visual-line.cyan {
+      width: 75%;
+      background: var(--cyan);
+    }
+
+    .visual-line.short {
+      width: 40%;
+      background: #30363d;
+    }
+
+    .left-footer {
+      color: #6e7681;
+      font-size: 10px;
+    }
+
+    .right-panel {
+      width: 57%;
+      min-height: 100vh;
+      padding: 35px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+              radial-gradient(circle at 85% 90%, rgba(63,185,80,.07), transparent 40%),
+              #0b0f14;
+    }
+
+    .register-card {
+      width: 100%;
+      max-width: 590px;
+      padding: 30px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.25);
+    }
+
+    .card-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 21px;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .card-brand .brand-icon {
+      width: 32px;
+      height: 32px;
+    }
+
+    .register-card h2 {
+      margin-bottom: 7px;
+      font-size: 24px;
+    }
+
+    .subtitle {
+      margin-bottom: 23px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .error-message {
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      color: #ff7b72;
+      background: rgba(248,81,73,.10);
+      border: 1px solid rgba(248,81,73,.3);
+      border-radius: 8px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: 15px;
+    }
+
+    .form-group {
+      min-width: 0;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      color: var(--text);
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      outline: none;
+      font-family: inherit;
+      font-size: 12px;
+      transition: .2s;
+    }
+
+    .form-control::placeholder {
+      color: #6e7681;
+    }
+
+    .form-control:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(47,129,247,.12);
+    }
+
+    textarea.form-control {
+      min-height: 85px;
+      resize: vertical;
+    }
+
+    .form-hint {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 13px;
+      margin-top: 21px;
+      color: white;
+      background: linear-gradient(90deg,#0969da,#2f81f7);
+      border: none;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: .2s;
+      box-shadow: 0 5px 18px rgba(47,129,247,.18);
+    }
+
+    .btn-primary:hover {
+      background: #1f6feb;
+      transform: translateY(-2px);
+    }
+
+    .login-text {
+      margin-top: 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .login-link {
+      color: var(--cyan);
+      font-weight: 800;
+    }
+
+    .login-link:hover {
+      text-decoration: underline;
+    }
+
+    @media(max-width: 950px) {
+      .left-panel {
+        width: 40%;
+        padding: 35px 5%;
+      }
+
+      .right-panel {
+        width: 60%;
+        padding: 25px 18px;
+      }
+
+      .hero-content h1 {
+        font-size: 38px;
+      }
+
+      .register-card {
+        padding: 24px;
+      }
+    }
+
+    @media(max-width: 650px) {
+      body {
+        flex-direction: column;
+      }
+
+      .left-panel {
+        width: 100%;
+        min-height: auto;
+        padding: 25px 7%;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .hero-content {
+        margin: 35px 0 25px;
+      }
+
+      .hero-content h1 {
+        font-size: 36px;
+      }
+
+      .hero-content p {
+        font-size: 13px;
+      }
+
+      .visual-card,
+      .left-footer {
+        display: none;
+      }
+
+      .right-panel {
+        width: 100%;
+        min-height: auto;
+        padding: 30px 17px;
+      }
+
+      .register-card {
+        max-width: 500px;
+        padding: 23px 19px;
+      }
+    }
+
+    @media(max-width: 420px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group.full {
+        grid-column: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<section class="left-panel">
+
+  <a href="/" class="brand">
+    <div class="brand-icon">&lt;/&gt;</div>
+    <div>Dev <span>Connect</span></div>
+  </a>
+
+  <div class="hero-content">
+
+    <h1>
+      Impulsa tu empresa
+      y encuentra
+      <span>grandes talentos.</span>
+    </h1>
+
+    <p>
+      Forma parte de DevConnect. Registra tu organización,
+      publica oportunidades laborales y conecta con profesionales
+      preparados para nuevos desafíos.
+    </p>
+
+    <div class="features">
+      <div class="feature">
+        <span>✓</span> Perfil empresarial
+      </div>
+
+      <div class="feature">
+        <span>✓</span> Publicación de vacantes
+      </div>
+
+      <div class="feature">
+        <span>✓</span> Conexión profesional
+      </div>
+    </div>
+
+  </div>
+
+  <div class="visual-card">
+    <div class="window-dots">
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+
+    <div class="visual-line"></div>
+    <div class="visual-line short"></div>
+    <div class="visual-line green"></div>
+    <div class="visual-line cyan"></div>
+    <div class="visual-line"></div>
+  </div>
+
+  <div class="left-footer">
+    DevConnect · Construido para conectar empresas y profesionales
+  </div>
+
+</section>
+
+<section class="right-panel">
+
+  <div class="register-card">
+
+    <div class="card-brand">
+      <div class="brand-icon">&lt;/&gt;</div>
+      <div>Dev <span style="color:var(--cyan)">Connect</span></div>
+    </div>
+
+    <h2>Crear cuenta empresarial</h2>
+
+    <p class="subtitle">
+      Registra tu organización y comienza a publicar oportunidades laborales.
+    </p>
+
+    <p class="error-message"
+       th:if="${error}"
+       th:text="${error}">
+    </p>
+
+    <form th:action="@{/company/register}"
+          th:object="${company}"
+          method="post">
+
+      <div class="form-grid">
+
+        <div class="form-group full">
+          <label for="name">Nombre de la empresa *</label>
+          <input class="form-control"
+                 id="name"
+                 th:field="*{name}"
+                 placeholder="Ej. Tecnología Global S.A.S."
+                 autocomplete="organization"
+                 required>
+        </div>
+
+        <div class="form-group full">
+          <label for="email">Correo empresarial *</label>
+          <input class="form-control"
+                 id="email"
+                 type="email"
+                 th:field="*{email}"
+                 placeholder="empresa@correo.com"
+                 autocomplete="email"
+                 required>
+        </div>
+
+        <div class="form-group full">
+          <label for="password">Contraseña *</label>
+          <input class="form-control"
+                 id="password"
+                 type="password"
+                 th:field="*{password}"
+                 placeholder="Crea una contraseña"
+                 autocomplete="new-password"
+                 required>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Teléfono</label>
+          <input class="form-control"
+                 id="phone"
+                 th:field="*{phone}"
+                 type="tel"
+                 placeholder="Número de contacto">
+        </div>
+
+        <div class="form-group">
+          <label for="location">Ubicación</label>
+          <input class="form-control"
+                 id="location"
+                 th:field="*{location}"
+                 placeholder="Ciudad, departamento">
+        </div>
+
+        <div class="form-group full">
+          <label for="website">Página web</label>
+          <input class="form-control"
+                 id="website"
+                 th:field="*{website}"
+                 type="url"
+                 placeholder="https://www.empresa.com">
+        </div>
+
+        <div class="form-group full">
+          <label for="description">Descripción de la empresa</label>
+          <textarea class="form-control"
+                    id="description"
+                    th:field="*{description}"
+                    placeholder="Cuéntanos sobre tu organización, actividad y servicios..."></textarea>
+        </div>
+
+      </div>
+
+      <button type="submit" class="btn-primary">
+        Crear cuenta empresarial →
+      </button>
+
+    </form>
+
+    <p class="login-text">
+      ¿Ya tienes una cuenta?
+      <a th:href="@{/company/login}" class="login-link">
+        Inicia sesión aquí
+      </a>
+    </p>
+
+  </div>
+
+</section>
+
+</body>
+</html>
