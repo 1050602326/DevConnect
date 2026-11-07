@@ -1,0 +1,417 @@
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil empresarial | DevConnect</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #0d1117;
+            --panel: #161b22;
+            --border: #30363d;
+            --text: #f0f6fc;
+            --muted: #8b949e;
+            --blue: #2f81f7;
+            --green: #3fb950;
+            --cyan: #39c5cf;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Inter, Arial, sans-serif;
+            color: var(--text);
+            background:
+                    radial-gradient(circle at 85% 10%, rgba(63,185,80,.10), transparent 30%),
+                    radial-gradient(circle at 10% 90%, rgba(47,129,247,.15), transparent 35%),
+                    var(--bg);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .navbar {
+            min-height: 72px;
+            padding: 0 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(13,17,23,.94);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            font-size: 21px;
+            font-weight: 800;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #0969da, #39c5cf);
+            box-shadow: 0 0 25px rgba(47,129,247,.3);
+        }
+
+        .brand span {
+            color: var(--cyan);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 11px 17px;
+            border-radius: 9px;
+            border: 1px solid var(--border);
+            font-size: 13px;
+            font-weight: 700;
+            transition: .2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            color: var(--text);
+            background: transparent;
+        }
+
+        .btn-blue {
+            color: white;
+            border: none;
+            background: linear-gradient(90deg, #0969da, #2f81f7);
+            box-shadow: 0 6px 20px rgba(47,129,247,.2);
+        }
+
+        .btn-green {
+            color: #07120a;
+            border: none;
+            background: linear-gradient(90deg, #2ea043, #3fb950);
+        }
+
+        .container {
+            width: min(1000px, 90%);
+            margin: auto;
+            padding: 45px 0;
+        }
+
+        .heading {
+            margin-bottom: 27px;
+        }
+
+        .heading-label {
+            display: inline-block;
+            padding: 6px 11px;
+            margin-bottom: 14px;
+            border-radius: 30px;
+            color: var(--green);
+            background: rgba(63,185,80,.09);
+            border: 1px solid rgba(63,185,80,.25);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .heading h1 {
+            font-size: clamp(27px, 4vw, 36px);
+            margin-bottom: 10px;
+        }
+
+        .heading h1 span {
+            color: var(--cyan);
+        }
+
+        .heading p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .profile-card {
+            overflow: hidden;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            box-shadow: 0 18px 45px rgba(0,0,0,.2);
+        }
+
+        .profile-banner {
+            height: 125px;
+            background:
+                    radial-gradient(circle at 80% 20%, rgba(63,185,80,.35), transparent 30%),
+                    linear-gradient(110deg, #102b50, #123b43, #142b37);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .profile-content {
+            padding: 0 30px 30px;
+        }
+
+        .company-avatar {
+            width: 82px;
+            height: 82px;
+            margin-top: -41px;
+            margin-bottom: 17px;
+            display: grid;
+            place-items: center;
+            border: 5px solid var(--panel);
+            border-radius: 20px;
+            color: white;
+            background: linear-gradient(135deg, #0969da, #39c5cf);
+            font-size: 32px;
+            font-weight: 800;
+            box-shadow: 0 7px 25px rgba(47,129,247,.25);
+        }
+
+        .company-name {
+            font-size: 25px;
+            margin-bottom: 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .company-label {
+            display: inline-block;
+            padding: 6px 11px;
+            color: var(--green);
+            background: rgba(63,185,80,.09);
+            border: 1px solid rgba(63,185,80,.25);
+            border-radius: 30px;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .profile-description {
+            margin: 22px 0 27px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.8;
+            overflow-wrap: anywhere;
+        }
+
+        .section-title {
+            margin-bottom: 17px;
+            font-size: 17px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 15px;
+        }
+
+        .info-item {
+            padding: 17px;
+            background: #0d1117;
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            min-width: 0;
+        }
+
+        .info-label {
+            display: block;
+            margin-bottom: 9px;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        .info-value {
+            color: var(--text);
+            font-size: 14px;
+            overflow-wrap: anywhere;
+        }
+
+        .profile-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        footer {
+            padding: 25px;
+            text-align: center;
+            color: #6e7681;
+            border-top: 1px solid var(--border);
+            font-size: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-content {
+                padding: 0 20px 24px;
+            }
+
+            .navbar {
+                padding: 0 4%;
+            }
+
+            .profile-actions {
+                flex-direction: column;
+            }
+
+            .profile-actions .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <a href="/company/dashboard" class="brand">
+        <div class="brand-icon">&lt;/&gt;</div>
+        Dev<span>Connect</span>
+    </a>
+
+    <a href="/company/dashboard" class="btn btn-outline">
+        ← Volver al panel
+    </a>
+
+</nav>
+
+<main class="container">
+
+    <header class="heading">
+
+        <span class="heading-label">CUENTA EMPRESARIAL</span>
+
+        <h1>Perfil <span>empresarial</span></h1>
+
+        <p>
+            Consulta la información registrada de tu organización
+            en la plataforma DevConnect.
+        </p>
+
+    </header>
+
+    <section class="profile-card">
+
+        <div class="profile-banner"></div>
+
+        <div class="profile-content">
+
+            <div class="company-avatar">
+                <span th:text="${#strings.substring(company.name, 0, 1).toUpperCase()}">
+                    E
+                </span>
+            </div>
+
+            <h2 class="company-name"
+                th:text="${company.name}">
+                Nombre de la empresa
+            </h2>
+
+            <span class="company-label">
+                ● EMPRESA REGISTRADA
+            </span>
+
+            <p class="profile-description"
+               th:text="${company.description != null and !company.description.isBlank() ? company.description : 'Esta empresa aún no ha agregado una descripción.'}">
+                Descripción empresarial
+            </p>
+
+            <h3 class="section-title">Información de contacto</h3>
+
+            <div class="info-grid">
+
+                <div class="info-item">
+
+                    <span class="info-label">Correo electrónico</span>
+
+                    <p class="info-value"
+                       th:text="${company.email}">
+                        correo@empresa.com
+                    </p>
+
+                </div>
+
+                <div class="info-item">
+
+                    <span class="info-label">Teléfono</span>
+
+                    <p class="info-value"
+                       th:text="${company.phone ?: 'No registrado'}">
+                        Teléfono
+                    </p>
+
+                </div>
+
+                <div class="info-item">
+
+                    <span class="info-label">Ubicación</span>
+
+                    <p class="info-value"
+                       th:text="${company.location ?: 'No registrada'}">
+                        Ubicación
+                    </p>
+
+                </div>
+
+                <div class="info-item">
+
+                    <span class="info-label">Sitio web</span>
+
+                    <p class="info-value"
+                       th:text="${company.website ?: 'No registrado'}">
+                        Sitio web
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="profile-actions">
+
+                <a href="/company/offers" class="btn btn-blue">
+                    ▣ Administrar mis ofertas
+                </a>
+
+                <a href="/offers" class="btn btn-green">
+                    Explorar ofertas públicas →
+                </a>
+
+                <a href="/company/dashboard" class="btn btn-outline">
+                    Volver al panel
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    DevConnect · Tecnología que conecta talento y empresas.
+</footer>
+
+</body>
+</html>
