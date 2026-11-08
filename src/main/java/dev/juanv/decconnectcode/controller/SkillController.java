@@ -9,6 +9,9 @@ import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+
+import org.springframework.web.bind.annotation.PathVariable;
+
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
@@ -48,4 +51,66 @@ public class SkillController {
             return "redirect:/profile?skillError";
         }
     }
+
+    @PostMapping("/profile/skill/{id}/delete")
+    public String deleteSkill(
+            @PathVariable Long id,
+            HttpSession session) {
+
+        Long professionalId =
+                sessionService.getProfessionalId(session);
+
+        if (professionalId == null) {
+            return "redirect:/login";
+        }
+
+        try {
+
+            skillService.deleteSkill(
+                    professionalId,
+                    id
+            );
+
+            return "redirect:/profile?skillDeleted";
+
+        } catch (IllegalArgumentException e) {
+
+            return "redirect:/profile?skillDeleteError";
+        }
+    }
+    @PostMapping("/profile/skill/{id}/edit")
+    public String editSkill(
+            @PathVariable Long id,
+            @Valid @ModelAttribute("skillRequest") SkillRequest request,
+            BindingResult bindingResult,
+            HttpSession session
+    ) {
+
+        Long professionalId =
+                sessionService.getProfessionalId(session);
+
+        if (professionalId == null) {
+            return "redirect:/login";
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "redirect:/profile?skillEditError";
+        }
+
+        try {
+
+            skillService.updateSkill(
+                    professionalId,
+                    id,
+                    request
+            );
+
+            return "redirect:/profile?skillUpdated";
+
+        } catch (IllegalArgumentException e) {
+
+            return "redirect:/profile?skillEditError";
+        }
+    }
+
 }

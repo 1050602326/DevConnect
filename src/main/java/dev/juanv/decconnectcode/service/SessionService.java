@@ -14,12 +14,6 @@ public class SessionService {
 
     public Long getProfessionalId(HttpSession session) {
         Object value = session.getAttribute(USER_ID);
-
-        if (value == null) {
-            return null;
-        }
-
-        return (Long) value;
     }
 
     public boolean isAuthenticated(HttpSession session) {

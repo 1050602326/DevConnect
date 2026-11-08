@@ -1,4 +1,3 @@
-
 package dev.juanv.decconnectcode.service;
 
 import dev.juanv.decconnectcode.dto.CertificationRequest;
@@ -24,10 +23,7 @@ public class CertificationService {
     }
 
     @Transactional
-    public Certification addCertification(
-            Long professionalId,
-            CertificationRequest request) {
-
+    public Certification addCertification(Long professionalId, CertificationRequest request) {
         ProfessionalProfile profile = profileService.findProfile(professionalId)
                 .orElseThrow(() ->
                         new IllegalArgumentException("Primero debes completar tu perfil profesional"));
@@ -45,5 +41,36 @@ public class CertificationService {
         return profileService.findProfile(professionalId)
                 .map(profile -> certificationRepository.findByProfileId(profile.getId()))
                 .orElseGet(List::of);
+    }
+
+    @Transactional
+    public Certification updateCertification(Long professionalId, Long certificationId,
+                                             CertificationRequest request) {
+        Certification certification = findOwnedCertification(professionalId, certificationId);
+        certification.setName(request.getName().trim());
+        certification.setInstitution(request.getInstitution().trim());
+        return certificationRepository.save(certification);
+    }
+
+    @Transactional
+    public void deleteCertification(Long professionalId, Long certificationId) {
+        Certification certification = findOwnedCertification(professionalId, certificationId);
+        certificationRepository.delete(certification);
+    }
+
+    private Certification findOwnedCertification(Long professionalId, Long certificationId) {
+        ProfessionalProfile profile = profileService.findProfile(professionalId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Perfil profesional no encontrado"));
+
+        Certification certification = certificationRepository.findById(certificationId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Certificación no encontrada"));
+
+        if (!certification.getProfile().getId().equals(profile.getId())) {
+            throw new IllegalArgumentException("No tienes permiso sobre esta certificación");
+        }
+
+        return certification;
     }
 }

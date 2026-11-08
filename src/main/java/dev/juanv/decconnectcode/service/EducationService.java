@@ -1,4 +1,3 @@
-
 package dev.juanv.decconnectcode.service;
 
 import dev.juanv.decconnectcode.dto.EducationRequest;
@@ -42,5 +41,35 @@ public class EducationService {
         return profileService.findProfile(professionalId)
                 .map(profile -> educationRepository.findByProfileId(profile.getId()))
                 .orElseGet(List::of);
+    }
+
+    @Transactional
+    public Education updateEducation(Long professionalId, Long educationId, EducationRequest request) {
+        Education education = findOwnedEducation(professionalId, educationId);
+        education.setInstitution(request.getInstitution().trim());
+        education.setProgram(request.getProgram().trim());
+        return educationRepository.save(education);
+    }
+
+    @Transactional
+    public void deleteEducation(Long professionalId, Long educationId) {
+        Education education = findOwnedEducation(professionalId, educationId);
+        educationRepository.delete(education);
+    }
+
+    private Education findOwnedEducation(Long professionalId, Long educationId) {
+        ProfessionalProfile profile = profileService.findProfile(professionalId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Perfil profesional no encontrado"));
+
+        Education education = educationRepository.findById(educationId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Estudio no encontrado"));
+
+        if (!education.getProfile().getId().equals(profile.getId())) {
+            throw new IllegalArgumentException("No tienes permiso sobre este estudio");
+        }
+
+        return education;
     }
 }

@@ -1,4 +1,3 @@
-
 package dev.juanv.decconnectcode.controller;
 
 import dev.juanv.decconnectcode.dto.EducationRequest;
@@ -9,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
@@ -26,8 +26,7 @@ public class EducationController {
 
     @PostMapping("/profile/education")
     public String addEducation(
-            @Valid @ModelAttribute("educationRequest")
-            EducationRequest request,
+            @Valid @ModelAttribute("educationRequest") EducationRequest request,
             BindingResult result,
             HttpSession session) {
 
@@ -47,5 +46,21 @@ public class EducationController {
         } catch (IllegalArgumentException e) {
             return "redirect:/profile?educationError";
         }
+    }
+
+    @PostMapping("/profile/education/delete/{id}")
+    public String deleteEducation(
+            @PathVariable Long id,
+            HttpSession session) {
+
+        Long professionalId = sessionService.getProfessionalId(session);
+
+        if (professionalId == null) {
+            return "redirect:/login";
+        }
+
+        educationService.deleteEducation(professionalId, id);
+
+        return "redirect:/profile?educationDeleted";
     }
 }
