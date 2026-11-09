@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Postulantes | DevConnect</title>
+    <link rel="stylesheet" th:href="@{/css/application.css}">
+</head>
+<body>
+
+<header class="topbar">
+    <a class="brand" th:href="@{/company/dashboard}">
+        <div class="brand-icon">&lt;/&gt;</div>
+        Dev<span>Connect</span>
+    </a>
+    <nav class="nav">
+        <a th:href="@{/company/dashboard}">Panel</a>
+        <a th:href="@{/company/offers}">Mis ofertas</a>
+        <form th:action="@{/company/logout}" method="post">
+            <button type="submit" class="link-btn">Cerrar sesión</button>
+        </form>
+    </nav>
+</header>
+
+<main class="container">
+
+    <div class="page-header">
+        <h1>Postulantes</h1>
+        <p>Profesionales que se postularon a las ofertas de tu empresa.</p>
+    </div>
+
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+    <div class="card">
+
+        <div th:if="${#lists.isEmpty(applications)}" class="empty">
+            <div class="icon">👥</div>
+            <p>Todavía no hay postulantes en tus ofertas.</p>
+            <a th:href="@{/company/offers}" class="btn">Ver mis ofertas</a>
+        </div>
+
+        <div th:unless="${#lists.isEmpty(applications)}" class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>Oferta</th>
+                    <th>Profesional</th>
+                    <th>Email</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Cambiar estado</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="app : ${applications}">
+                    <td th:text="${app.jobOffer.title}">Oferta</td>
+                    <td th:text="${app.professional.firstName + ' ' + app.professional.lastName}">Nombre</td>
+                    <td class="muted" th:text="${app.professional.email}">correo</td>
+                    <td class="muted"
+                        th:text="${#temporals.format(app.appliedAt, 'dd/MM/yyyy HH:mm')}">Fecha</td>
+                    <td>
+                            <span class="badge"
+                                  th:classappend="${'status-' + #strings.toLowerCase(app.status)}"
+                                  th:text="${app.status}">PENDIENTE</span>
+                    </td>
+                    <td>
+                        <form class="status-form"
+                              th:action="@{/company/applications/{id}/status(id=${app.id})}"
+                              method="post">
+                            <select name="status">
+                                <option th:each="s : ${statuses}"
+                                        th:value="${s}"
+                                        th:text="${s}"
+                                        th:selected="${s == app.status}"></option>
+                            </select>
+                            <button type="submit" class="btn">Guardar</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</main>
+
+</body>
+</html>

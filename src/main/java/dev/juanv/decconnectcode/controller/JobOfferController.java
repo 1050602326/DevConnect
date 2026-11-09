@@ -1,4 +1,3 @@
-
 package dev.juanv.decconnectcode.controller;
 
 import dev.juanv.decconnectcode.model.JobOffer;
@@ -25,6 +24,11 @@ public class JobOfferController {
     @GetMapping
     public String listOffers(HttpSession session, Model model) {
         Long companyId = sessionService.getCompanyId(session);
+
+        if (companyId == null) {
+            return "redirect:/company/login";
+        }
+
         model.addAttribute("offers",
                 jobOfferService.getCompanyOffers(companyId));
         return "company/offers/list";
@@ -42,12 +46,15 @@ public class JobOfferController {
         return "company/offers/form";
     }
 
-
     @PostMapping("/save")
     public String saveOffer(@ModelAttribute JobOffer offer,
                             HttpSession session) {
 
         Long companyId = sessionService.getCompanyId(session);
+
+        if (companyId == null) {
+            return "redirect:/company/login";
+        }
 
         if (offer.getTitle() == null || offer.getTitle().isBlank()
                 || offer.getDescription() == null
@@ -63,11 +70,14 @@ public class JobOfferController {
         return "redirect:/company/offers";
     }
 
-
     @GetMapping("/edit/{id}")
     public String editOffer(@PathVariable Long id,
                             HttpSession session, Model model) {
         Long companyId = sessionService.getCompanyId(session);
+
+        if (companyId == null) {
+            return "redirect:/company/login";
+        }
 
         try {
             model.addAttribute("offer",
@@ -78,13 +88,16 @@ public class JobOfferController {
         }
     }
 
-
     @PostMapping("/update/{id}")
     public String updateOffer(@PathVariable Long id,
                               @ModelAttribute JobOffer offer,
                               HttpSession session) {
 
         Long companyId = sessionService.getCompanyId(session);
+
+        if (companyId == null) {
+            return "redirect:/company/login";
+        }
 
         if (offer.getTitle() == null || offer.getTitle().isBlank()
                 || offer.getDescription() == null
@@ -103,12 +116,16 @@ public class JobOfferController {
         }
     }
 
-
     @PostMapping("/status/{id}")
     public String changeStatus(@PathVariable Long id,
                                @RequestParam boolean active,
                                HttpSession session) {
+
         Long companyId = sessionService.getCompanyId(session);
+
+        if (companyId == null) {
+            return "redirect:/company/login";
+        }
 
         try {
             jobOfferService.changeStatus(id, companyId, active);
