@@ -1,0 +1,314 @@
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <title>DevConnect | Conecta talento y oportunidades</title>
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <a th:href="@{/}" href="/" class="brand">
+        <div class="brand-icon">&lt;/&gt;</div>
+        Dev<span>Connect</span>
+    </a>
+
+    <nav class="nav-links">
+        <a href="#inicio">Inicio</a>
+        <a href="#nosotros">Nosotros</a>
+        <a href="#servicios">Servicios</a>
+        <a href="#ofertas">Ofertas</a>
+    </nav>
+
+    <div class="nav-actions">
+        <a th:href="@{/login}" href="/login" class="btn btn-outline">
+            Iniciar sesión
+        </a>
+
+        <a th:href="@{/register}" href="/register" class="btn btn-blue">
+            Registrarse
+        </a>
+    </div>
+
+</header>
+
+<main>
+
+    <!-- PRESENTACIÓN -->
+
+    <section class="container hero" id="inicio">
+
+        <div>
+
+            <span class="hero-label">
+                ● PLATAFORMA DE TALENTO TECNOLÓGICO
+            </span>
+
+            <h1>
+                Conecta tu talento con
+                <span>nuevas oportunidades.</span>
+            </h1>
+
+            <p>
+                En DevConnect conectamos profesionales del sector tecnológico
+                con empresas que buscan talento. Descubre oportunidades laborales,
+                presenta tus habilidades y construye tu futuro profesional.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="#ofertas" class="btn btn-blue">
+                    Explorar ofertas →
+                </a>
+
+                <a th:href="@{/register}" href="/register"
+                   class="btn btn-green">
+                    Crear cuenta gratis
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="hero-visual">
+
+            <div class="visual-header">
+                <h3>Oportunidades DevConnect</h3>
+                <span class="status">● Conectando talento</span>
+            </div>
+
+            <div class="visual-card">
+                <h4>Desarrollo de software</h4>
+                <p>
+                    Conecta tus conocimientos en programación
+                    con empresas que buscan nuevos profesionales.
+                </p>
+                <span class="visual-tag">Tecnología</span>
+            </div>
+
+            <div class="visual-card">
+                <h4>Perfiles profesionales</h4>
+                <p>
+                    Comparte tu experiencia, habilidades,
+                    formación académica y certificaciones.
+                </p>
+                <span class="visual-tag">Talento profesional</span>
+            </div>
+
+            <div class="visual-card">
+                <h4>Empresas y oportunidades</h4>
+                <p>
+                    Encuentra organizaciones que necesitan
+                    personas con tus conocimientos.
+                </p>
+                <span class="visual-tag">Conexión laboral</span>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- NOSOTROS -->
+
+    <section class="section container" id="nosotros">
+
+        <div class="section-title">
+            <h2>¿Qué es DevConnect?</h2>
+            <p>
+                Un espacio diseñado para conectar el talento tecnológico
+                con las oportunidades del mundo laboral.
+            </p>
+        </div>
+
+        <div class="cards">
+
+            <article class="card">
+                <div class="card-icon">◎</div>
+                <h3>Conexión profesional</h3>
+                <p>
+                    Permite a los profesionales mostrar su perfil,
+                    experiencia, conocimientos y capacidades.
+                </p>
+            </article>
+
+            <article class="card">
+                <div class="card-icon">▣</div>
+                <h3>Oportunidades laborales</h3>
+                <p>
+                    Consulta ofertas de empleo publicadas por empresas
+                    que buscan talento tecnológico.
+                </p>
+            </article>
+
+            <article class="card">
+                <div class="card-icon">◇</div>
+                <h3>Conexión empresarial</h3>
+                <p>
+                    Facilita a las organizaciones la publicación
+                    y administración de sus oportunidades laborales.
+                </p>
+            </article>
+
+        </div>
+
+    </section>
+
+    <!-- SERVICIOS -->
+
+    <section class="section container" id="servicios">
+
+        <div class="section-title">
+            <h2>¿Qué puedes hacer en la plataforma?</h2>
+            <p>
+                Herramientas pensadas para profesionales y empresas.
+            </p>
+        </div>
+
+        <div class="cards">
+
+            <article class="card">
+                <div class="card-icon">⌕</div>
+                <h3>Buscar empleo</h3>
+                <p>
+                    Explora oportunidades laborales y encuentra
+                    ofertas relacionadas con tu perfil profesional.
+                </p>
+            </article>
+
+            <article class="card">
+                <div class="card-icon">◉</div>
+                <h3>Crear tu perfil</h3>
+                <p>
+                    Registra tu información académica, habilidades,
+                    experiencia y certificaciones.
+                </p>
+            </article>
+
+            <article class="card">
+                <div class="card-icon">▤</div>
+                <h3>Publicar oportunidades</h3>
+                <p>
+                    Las empresas pueden gestionar sus ofertas
+                    y encontrar profesionales.
+                </p>
+            </article>
+
+        </div>
+
+    </section>
+
+    <!-- OFERTAS -->
+
+    <section class="offers-section" id="ofertas">
+
+        <div class="container">
+
+            <div class="section-title">
+                <h2>Ofertas laborales recientes</h2>
+                <p>
+                    Descubre algunas de las oportunidades disponibles
+                    en nuestra plataforma.
+                </p>
+            </div>
+
+            <div class="offer-list">
+
+                <!-- Las ofertas se cargarán desde el controlador -->
+
+                <article class="offer"
+                         th:each="offer : ${offers}">
+
+                    <h3 th:text="${offer.title}">
+                        Nombre de la oferta
+                    </h3>
+
+                    <p th:text="${offer.description}">
+                        Descripción de la oportunidad laboral.
+                    </p>
+
+                    <div class="offer-meta">
+
+                        <span th:if="${offer.location != null}"
+                              th:text="${offer.location}">
+                            Ubicación
+                        </span>
+
+                        <span th:if="${offer.modality != null}"
+                              th:text="${offer.modality}">
+                            Modalidad
+                        </span>
+
+                        <span th:if="${offer.employmentType != null}"
+                              th:text="${offer.employmentType}">
+                            Tipo de empleo
+                        </span>
+
+                    </div>
+
+                    <a th:href="@{/login}" class="offer-link">
+                        Inicia sesión para continuar →
+                    </a>
+
+                </article>
+
+                <div class="empty-offers"
+                     th:if="${offers == null or #lists.isEmpty(offers)}">
+
+                    <p>
+                        Actualmente no hay ofertas laborales disponibles.
+                        ¡Vuelve pronto para descubrir nuevas oportunidades!
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- REGISTRO -->
+
+    <section class="container">
+
+        <div class="cta">
+
+            <h2>Tu próxima oportunidad comienza aquí</h2>
+
+            <p>
+                Únete a DevConnect y forma parte de una comunidad
+                que conecta profesionales y empresas del sector tecnológico.
+            </p>
+
+            <div class="hero-buttons" style="justify-content:center;">
+
+                <a th:href="@{/register}" href="/register"
+                   class="btn btn-blue">
+                    Registrarme como profesional
+                </a>
+
+                <a th:href="@{/company/register}" href="/company/register"
+                   class="btn btn-green">
+                    Registrar mi empresa
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    DevConnect · Tecnología que conecta talento y empresas.
+    <br><br>
+    © 2026 DevConnect. Todos los derechos reservados.
+</footer>
+
+</body>
+</html>
