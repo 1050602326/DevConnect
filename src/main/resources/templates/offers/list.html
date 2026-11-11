@@ -309,9 +309,9 @@
     <div class="brand-name">Dev<span>Connect</span></div>
   </a>
 
-  <a href="/login" class="btn btn-outline">
-    Iniciar sesión
-  </a>
+  <a th:if="${isCompany}" href="/company/dashboard" class="btn btn-outline">Mi panel</a>
+  <a th:if="${loggedIn}" href="/profile" class="btn btn-outline">Mi perfil</a>
+  <a th:if="${!loggedIn and !isCompany}" href="/login" class="btn btn-outline">Iniciar sesión</a>
 </nav>
 
 <main class="container">
@@ -364,10 +364,31 @@
         Descripción de la oferta laboral.
       </p>
 
-      <a th:href="@{/offers/{id}(id=${offer.id})}"
-         class="btn btn-outline">
-        Ver detalles de la oferta →
-      </a>
+
+      <div class="offer-actions">
+
+        <a th:href="@{/offers/{id}(id=${offer.id})}" class="btn btn-outline">
+          Ver detalles →
+        </a>
+
+        <!-- Solo profesionales con sesión -->
+        <form th:if="${loggedIn}"
+              th:action="@{/offers/{jobOfferId}/apply(jobOfferId=${offer.id})}"
+              method="post">
+          <button type="submit" class="btn btn-blue">Postularme →</button>
+        </form>
+
+        <!-- Visitante sin sesión -->
+        <a th:if="${!loggedIn and !isCompany}" href="/login" class="btn btn-blue">
+          Inicia sesión para postularte
+        </a>
+
+        <!-- Las empresas no ven botón de postular -->
+
+        <div th:replace="~{fragments/userbar :: userbar('company')}"></div>
+
+      </div>
+
 
     </article>
 

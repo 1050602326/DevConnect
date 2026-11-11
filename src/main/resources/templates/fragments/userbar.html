@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="userbar(role)" class="ub-wrap">
+
+    <style>
+        .ub-wrap { display: inline-flex; }
+        .ub { display: flex; align-items: center; gap: 10px; padding: 6px 12px 6px 8px;
+            border: 1px solid #30363d; border-radius: 999px; background: rgba(22,27,34,.9);
+            color: #f0f6fc; font-family: Inter, Arial, sans-serif; }
+        .ub a.ub-link { display: flex; align-items: center; gap: 9px; color: inherit; text-decoration: none; }
+        .ub-icon { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+            font-size: 15px; background: rgba(47,129,247,.15); border: 1px solid rgba(47,129,247,.35); }
+        .ub-icon.company { background: rgba(63,185,80,.12); border-color: rgba(63,185,80,.35); }
+        .ub-text { display: flex; flex-direction: column; line-height: 1.2; }
+        .ub-name { font-size: 13px; font-weight: 700; max-width: 160px; overflow: hidden;
+            text-overflow: ellipsis; white-space: nowrap; }
+        .ub-role { font-size: 10px; color: #56d364; }
+        .ub form { margin: 0; }
+        .ub-out { background: none; border: none; border-left: 1px solid #30363d; padding: 4px 0 4px 10px;
+            color: #ff7b72; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; }
+        .ub-out:hover { color: #f85149; }
+        @media (max-width: 600px) { .ub-text { display: none; } }
+    </style>
+
+    <!-- PROFESIONAL -->
+    <div class="ub" th:if="${(role == 'professional' or role == 'auto') and professionalName != null}">
+        <a class="ub-link" th:href="@{/profile}">
+            <span class="ub-icon">💼</span>
+            <span class="ub-text">
+                <span class="ub-name" th:text="${professionalName}">Nombre</span>
+                <span class="ub-role">● Profesional</span>
+            </span>
+        </a>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="ub-out">Salir</button>
+        </form>
+    </div>
+
+    <!-- EMPRESA -->
+    <div class="ub" th:if="${(role == 'company' or (role == 'auto' and professionalName == null)) and companyName != null}">
+        <a class="ub-link" th:href="@{/company/dashboard}">
+            <span class="ub-icon company">🏢</span>
+            <span class="ub-text">
+                <span class="ub-name" th:text="${companyName}">Empresa</span>
+                <span class="ub-role">● Empresa</span>
+            </span>
+        </a>
+        <form th:action="@{/company/logout}" method="post">
+            <button type="submit" class="ub-out">Salir</button>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>

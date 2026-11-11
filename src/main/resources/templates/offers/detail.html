@@ -400,9 +400,37 @@
             </div>
 
             <div class="offer-actions">
-                <a href="/offers" class="btn btn-blue">
-                    ← Volver al listado de ofertas
+
+                <!-- Mensajes -->
+                <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+                <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+                <!-- Sin sesión de profesional -->
+                <a th:unless="${loggedIn}" th:href="@{/login}" class="btn btn-blue">
+                    Inicia sesión para postularte
                 </a>
+
+                <!-- Ya se postuló -->
+                <span th:if="${loggedIn and alreadyApplied}" class="btn btn-applied">
+                     ✓ Ya te postulaste
+                </span>
+
+                <!-- Puede postularse -->
+                <form th:if="${loggedIn and !alreadyApplied}"
+                      th:action="@{/offers/{id}/apply(id=${offer.id})}"
+                      method="post"
+                      class="apply-form">
+                    <button type="submit" class="btn btn-blue" style="border:none;">
+                        Postularme
+                    </button>
+                </form>
+
+                <a href="/offers" class="btn btn-outline">
+                    ← Volver al listado
+                </a>
+
+                <div th:replace="~{fragments/userbar :: userbar('company')}"></div>
+
             </div>
 
         </div>
