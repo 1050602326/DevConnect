@@ -1,343 +1,20 @@
-
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar sesión | DevConnect</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        :root {
-            --bg: #0d1117;
-            --panel: #161b22;
-            --panel-soft: #1c2128;
-            --border: #30363d;
-            --text: #f0f6fc;
-            --muted: #8b949e;
-            --blue: #2f81f7;
-            --blue-hover: #58a6ff;
-            --green: #3fb950;
-            --cyan: #39c5cf;
-            --danger: #f85149;
-        }
-
-        body {
-            min-height: 100vh;
-            font-family: Inter, Arial, Helvetica, sans-serif;
-            background:
-                    radial-gradient(circle at 20% 20%, rgba(47,129,247,.18), transparent 32%),
-                    radial-gradient(circle at 85% 80%, rgba(63,185,80,.12), transparent 28%),
-                    var(--bg);
-            color: var(--text);
-        }
-
-        .page {
-            min-height: 100vh;
-            display: grid;
-            grid-template-columns: 1.15fr .85fr;
-        }
-
-        .hero {
-            position: relative;
-            padding: 55px 8%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            overflow: hidden;
-            border-right: 1px solid var(--border);
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 22px;
-            font-weight: 800;
-        }
-
-        .brand-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #0969da, #39c5cf);
-            display: grid;
-            place-items: center;
-            font-weight: 900;
-            box-shadow: 0 0 30px rgba(47,129,247,.35);
-        }
-
-        .brand span {
-            color: var(--cyan);
-        }
-
-        .hero-content {
-            max-width: 620px;
-            margin: 70px 0;
-        }
-
-        .hero h1 {
-            font-size: clamp(42px, 5vw, 72px);
-            line-height: 1.02;
-            letter-spacing: -2px;
-            margin-bottom: 24px;
-        }
-
-        .hero h1 strong {
-            color: var(--green);
-        }
-
-        .hero-description {
-            color: var(--muted);
-            font-size: 18px;
-            line-height: 1.7;
-            max-width: 540px;
-        }
-
-        .features {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 32px;
-        }
-
-        .feature {
-            border: 1px solid var(--border);
-            background: rgba(22,27,34,.7);
-            border-radius: 999px;
-            padding: 9px 14px;
-            font-size: 13px;
-            color: #c9d1d9;
-        }
-
-        .feature::before {
-            content: "✓";
-            color: var(--green);
-            font-weight: bold;
-            margin-right: 7px;
-        }
-
-        .code-card {
-            position: absolute;
-            right: 5%;
-            bottom: 8%;
-            width: 300px;
-            padding: 22px;
-            background: rgba(22,27,34,.85);
-            border: 1px solid rgba(88,166,255,.35);
-            border-radius: 16px;
-            box-shadow: 0 20px 70px rgba(0,0,0,.4);
-            transform: rotate(-3deg);
-            backdrop-filter: blur(12px);
-        }
-
-        .code-dots {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 17px;
-        }
-
-        .dot {
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-        }
-
-        .red { background: #f85149; }
-        .yellow { background: #d29922; }
-        .green { background: #3fb950; }
-
-        .code-line {
-            height: 7px;
-            border-radius: 10px;
-            background: #30363d;
-            margin: 10px 0;
-        }
-
-        .code-line.blue { width: 80%; background: #1f6feb; }
-        .code-line.green { width: 65%; background: #238636; }
-        .code-line.cyan { width: 50%; background: #39c5cf; }
-        .code-line.short { width: 35%; }
-
-        .login-side {
-            padding: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .login-card {
-            width: 100%;
-            max-width: 470px;
-            background: rgba(22,27,34,.92);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 38px;
-            box-shadow: 0 25px 70px rgba(0,0,0,.35);
-        }
-
-        .login-card h2 {
-            font-size: 30px;
-            margin-bottom: 8px;
-        }
-
-        .subtitle {
-            color: var(--muted);
-            margin-bottom: 30px;
-        }
-
-        .form-group {
-            margin-bottom: 19px;
-        }
-
-        label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #c9d1d9;
-        }
-
-        .input-wrap {
-            position: relative;
-        }
-
-        input {
-            width: 100%;
-            background: #0d1117;
-            border: 1px solid var(--border);
-            color: var(--text);
-            border-radius: 10px;
-            padding: 13px 44px 13px 14px;
-            outline: none;
-            font-size: 15px;
-            transition: .2s ease;
-        }
-
-        input:focus {
-            border-color: var(--blue);
-            box-shadow: 0 0 0 3px rgba(47,129,247,.16);
-        }
-
-        input::placeholder {
-            color: #6e7681;
-        }
-
-        .input-icon {
-            position: absolute;
-            right: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--muted);
-        }
-
-        .toggle-password {
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .btn {
-            width: 100%;
-            border: none;
-            border-radius: 10px;
-            background: linear-gradient(90deg, #1f6feb, #2f81f7);
-            color: white;
-            padding: 14px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: .25s;
-            box-shadow: 0 8px 25px rgba(31,111,235,.25);
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            background: linear-gradient(90deg, #2f81f7, #39c5cf);
-            box-shadow: 0 12px 30px rgba(47,129,247,.35);
-        }
-
-        .error {
-            border: 1px solid rgba(248,81,73,.35);
-            background: rgba(248,81,73,.10);
-            color: #ff7b72;
-            padding: 12px 14px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        .field-error {
-            color: #ff7b72;
-            font-size: 12px;
-            display: block;
-            margin-top: 6px;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 25px;
-            color: var(--muted);
-            font-size: 14px;
-        }
-
-        a {
-            color: var(--blue-hover);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .tech-footer {
-            color: #6e7681;
-            font-size: 12px;
-        }
-
-        @media (max-width: 900px) {
-            .page {
-                grid-template-columns: 1fr;
-            }
-
-            .hero {
-                display: none;
-            }
-
-            .login-side {
-                min-height: 100vh;
-                padding: 20px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
 </head>
-
-<body>
-
+<body data-role="pro">
 <div class="page">
 
     <section class="hero">
-
-        <div class="brand">
-            <div class="brand-icon">&lt;/&gt;</div>
-            Dev<span>Connect</span>
-        </div>
+        <div class="brand"><div class="brand-icon">&lt;/&gt;</div><b>Dev<span>Connect</span></b></div>
 
         <div class="hero-content">
-            <h1>
-                Conecta tu talento con nuevas
-                <strong>oportunidades.</strong>
-            </h1>
-
-            <p class="hero-description">
-                Construye tu perfil profesional, comparte tus habilidades
-                y conecta con el ecosistema tecnológico.
-            </p>
-
+            <h1>Conecta tu talento con nuevas <strong>oportunidades.</strong></h1>
+            <p class="hero-description">Construye tu perfil profesional, comparte tus habilidades y conecta con el ecosistema tecnológico.</p>
             <div class="features">
                 <span class="feature">Perfil profesional</span>
                 <span class="feature">Habilidades</span>
@@ -345,148 +22,68 @@
             </div>
         </div>
 
-        <div class="code-card">
-            <div class="code-dots">
-                <span class="dot red"></span>
-                <span class="dot yellow"></span>
-                <span class="dot green"></span>
+        <div>
+            <div class="terminal">
+                <div class="terminal-header">
+                    <span class="dot" style="background:#f85149"></span>
+                    <span class="dot" style="background:#d29922"></span>
+                    <span class="dot" style="background:#3fb950"></span>
+                </div>
+                <div class="terminal-body" id="term" data-lines="$ devconnect login --role profesional|✓ perfil cargado|✓ 12 ofertas nuevas para ti">$ devconnect login --role profesional<br>✓ perfil cargado<br>✓ 12 ofertas nuevas para ti</div>
             </div>
-
-            <div class="code-line blue"></div>
-            <div class="code-line short"></div>
-            <div class="code-line green"></div>
-            <div class="code-line cyan"></div>
-            <div class="code-line blue"></div>
+            <div class="tech-footer" style="margin-top:22px">DevConnect · Construido para desarrolladores</div>
         </div>
-
-        <div class="tech-footer">
-            DevConnect · Construido para desarrolladores
-        </div>
-
     </section>
 
-
-    <section class="login-side">
-
-        <div class="login-card">
-
-            <div class="brand" style="margin-bottom:30px;">
-                <div class="brand-icon">&lt;/&gt;</div>
-                Dev<span>Connect</span>
-            </div>
+    <section class="form-side">
+        <div class="card">
+            <div class="brand" style="margin-bottom:26px"><div class="brand-icon">&lt;/&gt;</div><b>Dev<span>Connect</span></b></div>
 
             <h2>Inicia sesión</h2>
+            <p class="subtitle">Accede a tu cuenta profesional</p>
 
-            <p class="subtitle">
-                Accede a tu cuenta profesional
-            </p>
-
-            <div th:if="${error}"
-                 class="error"
-                 th:text="${error}">
+            <div class="tabs">
+                <span class="tab-indicator"></span>
+                <a class="tab active" data-role="pro" th:href="@{/login}">👤 Profesional</a>
+                <a class="tab" data-role="company" th:href="@{/company/login}">🏢 Empresa</a>
             </div>
 
-            <form th:action="@{/login}"
-                  th:object="${loginRequest}"
-                  method="post">
+            <div th:if="${error}" class="error" th:text="${error}"></div>
+
+            <form th:action="@{/login}" th:object="${loginRequest}" method="post">
 
                 <div class="form-group">
-
-                    <label for="email">
-                        Correo electrónico
-                    </label>
-
+                    <label for="email">Correo electrónico</label>
                     <div class="input-wrap">
-
-                        <input
-                                id="email"
-                                type="email"
-                                th:field="*{email}"
-                                placeholder="correo@ejemplo.com">
-
+                        <input id="email" type="email" th:field="*{email}" placeholder="correo@ejemplo.com" autocomplete="email">
                         <span class="input-icon">✉</span>
-
                     </div>
-
-                    <span
-                            class="field-error"
-                            th:if="${#fields.hasErrors('email')}"
-                            th:errors="*{email}">
-                    </span>
-
+                    <span class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
                 </div>
-
 
                 <div class="form-group">
-
-                    <label for="password">
-                        Contraseña
-                    </label>
-
+                    <label for="password">Contraseña</label>
                     <div class="input-wrap">
-
-                        <input
-                                id="password"
-                                type="password"
-                                th:field="*{password}"
-                                placeholder="Tu contraseña">
-
-                        <span
-                                class="input-icon toggle-password"
-                                onclick="togglePassword()">
-                            ◉
-                        </span>
-
+                        <input id="password" type="password" th:field="*{password}" placeholder="Tu contraseña" autocomplete="current-password">
+                        <button type="button" class="input-icon toggle-pw" data-target="password" aria-label="Mostrar contraseña">👁</button>
                     </div>
-
-                    <span
-                            class="field-error"
-                            th:if="${#fields.hasErrors('password')}"
-                            th:errors="*{password}">
-                    </span>
-
+                    <span class="field-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
                 </div>
 
-
-                <button type="submit" class="btn">
-                    Ingresar →
-                </button>
-
+                <button type="submit" class="btn">Ingresar →</button>
             </form>
-
 
             <p class="footer">
                 ¿Aún no tienes cuenta?
                 <a th:href="@{/register}">Regístrate aquí</a>
             </p>
-
-            <div style="margin-top:20px; text-align:center;">
-                <a th:href="@{/offers}" style="display:block; margin-bottom:12px;">
-                    Consultar ofertas laborales
-                </a>
-
-                <a th:href="@{/company/login}">
-                    ¿Eres una empresa? Accede aquí
-                </a>
+            <div class="links">
+                <a th:href="@{/offers}" style="display:block;margin-top:10px">Consultar ofertas laborales</a>
             </div>
-
         </div>
-
     </section>
-
 </div>
 
-
-<script>
-    function togglePassword() {
-        const input = document.getElementById("password");
-
-        input.type =
-            input.type === "password"
-                ? "text"
-                : "password";
-    }
-</script>
-
+<script th:src="@{/js/auth.js}"></script>
 </body>
 </html>

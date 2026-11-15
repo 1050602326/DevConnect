@@ -304,7 +304,26 @@
 <body>
 
 <nav class="navbar">
-  <a href="/" class="brand">
+  <!-- Empresa -->
+  <a th:if="${isCompany}"
+     href="/company/dashboard"
+     class="brand">
+    <div class="brand-icon">&lt;/&gt;</div>
+    <div class="brand-name">Dev<span>Connect</span></div>
+  </a>
+
+  <!-- Profesional -->
+  <a th:if="${loggedIn and !isCompany}"
+     href="/profile"
+     class="brand">
+    <div class="brand-icon">&lt;/&gt;</div>
+    <div class="brand-name">Dev<span>Connect</span></div>
+  </a>
+
+  <!-- Visitante -->
+  <a th:if="${!loggedIn and !isCompany}"
+     href="/"
+     class="brand">
     <div class="brand-icon">&lt;/&gt;</div>
     <div class="brand-name">Dev<span>Connect</span></div>
   </a>
