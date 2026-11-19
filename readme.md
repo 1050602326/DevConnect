@@ -69,6 +69,49 @@ capas, validación de datos, seguridad con contraseñas cifradas y una interfaz 
 
 ---
 
+
+
+---
+
+## Capturas de pantalla
+
+### Página de inicio
+
+<img src="src/main/resources/img/home.png" alt="Página de inicio" width="800">
+
+
+### Página de Autenticada
+
+<img src="src/main/resources/img/auth.png" alt="Página de auth" width="800">
+
+
+<img src="src/main/resources/img/auth_empresa.png" alt="Página de auth" width="800">
+
+
+
+
+
+### Experiencia del profesional
+
+<img src="src/main/resources/img/profecional.png" alt="Perfil del profesional" width="800">
+
+### Catálogo de ofertas
+
+<img src="src/main/resources/img/ofertas.png" alt="Listado de ofertas laborales" width="800">
+
+### Experiencia de la empresa
+
+<img src="src/main/resources/img/empresa.png" alt="Panel de la empresa" width="800">
+
+### Candidatos de la empresa
+
+<img src="src/main/resources/img/candidatos.png" alt="Candidatos postulados" width="800">
+
+### Ofertas de la empresa 
+
+<img src="src/main/resources/img/ofertas_empresa.png" alt="Candidatos postulados" width="800">
+
+
 ## Stack tecnológico
 
 | Capa | Tecnología |
@@ -253,8 +296,9 @@ y el seguimiento de sus estados.
 
 | Integrante | Rol |
 |------------|-----|
-| _Nombre_ | Desarrollo backend / frontend |
-| _Nombre_ | Base de datos / pruebas |
+| _Felipe Arias_ | Desarrollo backend / frontend |
+| _Juan Diego Verdugo_ | Base de datos / pruebas |
+| _Brayan naranjo_ | Requerimientos / tareas |
 
 **Asignatura:** Gerencia de Software — Sexto Semestre
 **Repositorio:** [github.com/1050602326/DevConnect](https://github.com/1050602326/DevConnect)
